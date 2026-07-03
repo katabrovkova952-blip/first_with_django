@@ -1,0 +1,9 @@
+<h1>✏️ Редагувати книгу</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Зберегти</button>
+</form>
+
+<a href="/">⬅ назад</a>

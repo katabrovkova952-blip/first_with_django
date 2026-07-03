@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BookShelf</title>
+</head>
+
+<body>
+
+<header style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #ccc;">
+
+    <div>
+        <a href="/">📚 BookShelf</a>
+        <a href="/" style="margin-left:10px;">Home</a>
+        <a href="/add/" style="margin-left:10px;">Add</a>
+    </div>
+
+    <div>
+        {% if user.is_authenticated %}
+            👤 {{ user.username }}
+
+            <form method="POST" action="/logout/" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <a href="/login/">Login</a>
+            <a href="/signup/">Signup</a>
+            <a href="/profile/">👤 Profile</a>
+        {% endif %}
+    </div>
+
+</header>
+
+<hr>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

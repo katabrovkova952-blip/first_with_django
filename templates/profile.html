@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>👤 Профіль користувача</h2>
+
+<p><b>Імʼя:</b> {{ user.username }}</p>
+<p><b>Email:</b> {{ user.email }}</p>
+
+<hr>
+
+<h3>📚 Мої книги</h3>
+
+{% for book in books %}
+    <div>
+        <a href="/book/{{ book.id }}/">{{ book.title }}</a>
+    </div>
+{% empty %}
+    <p>У тебе ще немає книг</p>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for book in books %}
+    <div>
+        <h2>
+            <a href="{% url 'book_detail' book.id %}">
+                {{ book.title }}
+            </a>
+        </h2>
+
+        <p>{{ book.author }}</p>
+
+        <a href="{% url 'edit_book' book.id %}">✏️</a>
+
+        <form method="POST" action="{% url 'delete_book' book.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">❌</button>
+        </form>
+    </div>
+
+    <hr>
+{% endfor %}
+
+{% endblock %}
