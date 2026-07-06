@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from .managers import BookQuerySet
+
 class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -8,6 +10,9 @@ class Book(models.Model):
     description = models.TextField(blank=True)
     year = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_published = models.BooleanField(default=False)
+
+    objects = BookQuerySet.as_manager()
 
     class Meta:
         ordering = ['-created_at']

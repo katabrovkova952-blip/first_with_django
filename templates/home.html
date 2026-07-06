@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<form method="get">
+    <input
+        type="text"
+        name="search"
+        placeholder="Пошук..."
+        value="{{ search|default:'' }}"
+    >
 
+    <button type="submit">🔍</button>
+</form>
+
+<hr>
 {% for book in books %}
     <div>
         <h2>
@@ -21,6 +32,14 @@
     </div>
 
     <hr>
+{% empty %}
+
+{% if search %}
+        <h3>😔 За запитом "<strong>{{ search }}</strong>" нічого не знайдено.</h3>
+    {% else %}
+        <h3>📚 У вас поки немає книг.</h3>
+    {% endif %}
+
 {% endfor %}
 
 {% endblock %}

@@ -4,6 +4,28 @@ from books.forms import BookForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Q
+
+@login_required
+def home(request):
+    books = Book.objects.for_user(request.user)
+
+    search = request.GET.get("search")
+
+    if search:
+        books = books.filter(
+            Q(title__icontains=search) |
+            Q(author__icontains=search)
+        )
+
+    return render(
+        request,
+        "home.html",
+        {
+            "books": books,
+            "search": search,
+        },
+    )
 
 
 def signup(request):
@@ -19,22 +41,20 @@ def signup(request):
 
 @login_required
 def profile(request):
-    books = Book.objects.filter(user=request.user)
+    books = Book.objects.for_user(request.user)
 
     return render(request, 'profile.html', {
         'user': request.user,
         'books': books
     })
 
-@login_required
-def home(request):
-    books = Book.objects.filter(user=request.user)
-    return render(request, 'home.html', {'books': books})
-
 
 @login_required
-def book_detail(request, id):
-    book = get_object_or_404(Book, id=id, user=request.user)
+def book_detail(request, book_id):
+    book = get_object_or_404(
+        Book.objects.for_user(request.user),
+        pk=book_id
+    )
     return render(request, 'detail.html', {'book': book})
 
 @login_required
@@ -52,8 +72,11 @@ def add_book(request):
     return render(request, 'add_book.html', {'form': form})
 
 @login_required
-def edit_book(request, id):
-    book = get_object_or_404(Book, id=id, user=request.user)
+def edit_book(request, book_id):
+    book = get_object_or_404(
+        Book.objects.for_user(request.user),
+        pk=book_id
+    )
 
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)
@@ -67,7 +90,10 @@ def edit_book(request, id):
 
 @login_required
 @require_POST
-def delete_book(request, id):
-    book = get_object_or_404(Book, id=id, user=request.user)
+def delete_book(request, book_id):
+    book = get_object_or_404(
+        Book.objects.for_user(request.user),
+        pk=book_id
+    )
     book.delete()
     return redirect('home')
