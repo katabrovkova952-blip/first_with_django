@@ -23,7 +23,7 @@ from books.views import signup, profile
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', include('books.urls')),
+    path('', include(('books.urls', 'books'), namespace='books')),
 
     path('signup/', signup, name='signup'),
     path(
