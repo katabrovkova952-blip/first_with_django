@@ -1,45 +1,51 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Бібліотека{% endblock %}
 
 {% block content %}
-<form method="get">
-    <input
-        type="text"
-        name="search"
-        placeholder="Пошук..."
-        value="{{ search|default:'' }}"
-    >
+<h1 class="mb-4">Список книг</h1>
 
-    <button type="submit">🔍</button>
-</form>
+<div class="row">
+    {% for book in page_obj %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text text-muted">{{ book.author }}</p>
+                    <a href="{% url 'books:detail' book.pk %}" class="btn btn-primary btn-sm">Детальніше</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Книг поки немає.</p>
+    {% endfor %}
+</div>
 
-<hr>
-{% for book in books %}
-    <div>
-        <h2>
-            <a href="{% url 'book_detail' book.id %}">
-                {{ book.title }}
-            </a>
-        </h2>
+{% if page_obj.has_other_pages %}
+<nav aria-label="Навігація сторінками" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
 
-        <p>{{ book.author }}</p>
+        {% for page in page_obj.paginator.page_range %}
+            <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ page }}{% if search %}&search={{ search }}{% endif %}">{{ page }}</a>
+            </li>
+        {% endfor %}
 
-        <a href="{% url 'edit_book' book.id %}">✏️</a>
-
-        <form method="POST" action="{% url 'delete_book' book.id %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">❌</button>
-        </form>
-    </div>
-
-    <hr>
-{% empty %}
-
-{% if search %}
-        <h3>😔 За запитом "<strong>{{ search }}</strong>" нічого не знайдено.</h3>
-    {% else %}
-        <h3>📚 У вас поки немає книг.</h3>
-    {% endif %}
-
-{% endfor %}
-
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}

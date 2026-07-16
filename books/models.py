@@ -15,6 +15,8 @@ class Book(models.Model):
     objects = BookQuerySet.as_manager()
 
     class Meta:
+        verbose_name = 'книгу'
+        verbose_name_plural = 'Мої книжки'
         ordering = ['-created_at']
 
     def __str__(self):
