@@ -2,7 +2,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-# from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 from django.views.generic import DetailView, DeleteView, CreateView, UpdateView, ListView
@@ -10,6 +9,7 @@ from django.core.paginator import Paginator
 
 from books.models import Book
 from books.forms import BookForm
+
 
 @login_required
 def home(request):
@@ -23,7 +23,7 @@ def home(request):
             Q(author__icontains=search)
         )
 
-    paginator = Paginator(books, 12)
+    paginator = Paginator(books, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -61,7 +61,7 @@ def profile(request):
 class BookListView(ListView):
     model = Book
     template_name = 'home.html'
-    paginate_by = 2
+    paginate_by = 3
 
 
 class BookCreateView(LoginRequiredMixin, CreateView):

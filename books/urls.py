@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework.viewsets import ViewSetMixin
 from . import views
 from .views_api import BookViewSet, PublicBookListView
 

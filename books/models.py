@@ -18,6 +18,12 @@ class Book(models.Model):
         verbose_name = 'книгу'
         verbose_name_plural = 'Мої книжки'
         ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "title"],
+                name="unique_book_title_for_user"
+            )
+        ]
 
     def __str__(self):
         return self.title
