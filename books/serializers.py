@@ -27,11 +27,6 @@ class BookSerializer(serializers.ModelSerializer):
             return value
 
 
-
-
-
-
-
 class PublicBookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
