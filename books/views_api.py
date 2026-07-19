@@ -10,8 +10,7 @@ from .serializers import BookSerializer, PublicBookSerializer
 from rest_framework.permissions import BasePermission
 
 
-class BookViewSet(ListModelMixin, RetrieveModelMixin,
-                  UpdateModelMixin, CreateModelMixin, viewsets.GenericViewSet,):
+class BookViewSet(viewsets.ModelViewSet):
 
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]

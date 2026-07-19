@@ -20,11 +20,11 @@ class BookSerializer(serializers.ModelSerializer):
             )
         ]
 
-        def validate_year(self, value):
-            current_year = timezone.now().year
-            if value < 1450 or value > current_year:
-                raise serializers.ValidationError("Рік має бути між 1450 і 2026")
-            return value
+    def validate_year(self, value):
+        current_year = timezone.now().year
+        if value < 1450 or value > current_year:
+            raise serializers.ValidationError("Рік має бути між 1450 і 2026")
+        return value
 
 
 class PublicBookSerializer(serializers.ModelSerializer):
