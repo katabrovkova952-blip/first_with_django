@@ -10,9 +10,17 @@ from .serializers import BookSerializer, PublicBookSerializer
 from rest_framework.permissions import BasePermission
 
 
-class BookViewSet(viewsets.ModelViewSet):
+class IsOwner(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
 
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user
+
+
+class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
+    permission_classes = [IsOwner]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['author', 'year', 'is_published']
     search_fields = ['title', 'author', 'description']
@@ -33,11 +41,3 @@ class PublicBookListView(ListModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         return Book.objects.filter(is_published=True)
-
-
-class IsOwner(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-        return obj.user == request.user
