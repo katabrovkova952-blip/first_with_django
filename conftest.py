@@ -6,8 +6,8 @@ from books.models import Book
 
 @pytest.fixture
 def make_user():
-    def _make_user(username="user", password="pass12345"):
-        return User.objects.create_user(username=username, password=password)
+    def _make_user(username="user", password="pass12345", is_staff=False):
+        return User.objects.create_user(username=username, password=password, is_staff=is_staff)
     return _make_user
 
 
@@ -28,5 +28,15 @@ def auth_client(api_client, user):
 
 
 @pytest.fixture
-def book(user):
-    return Book.objects.create(user=user, title="Книга Каті", author="A", year=2020)
+def make_auth_client():
+    def _make_auth_client(user):
+        client = APIClient()
+        client.force_authenticate(user=user)
+        return client
+    return _make_auth_client
+
+
+
+@pytest.fixture
+def book():
+    return Book.objects.create(title="Книга Каті", author="A", year=2020, total_pages=300)

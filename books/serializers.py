@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 from .models import Book, Shelf, Review
 from django.utils import timezone
 
@@ -9,15 +8,8 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ['id', 'title', 'author', 'description',
-                  'year', 'created_at',]
+                  'year', 'created_at', 'total_pages']
         read_only_fields = ['created_at']
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Book.objects.all(),
-                fields=['user', 'title'],
-                message="У вас вже є книга з такою назвою.",
-            )
-        ]
 
     def validate_year(self, value):
         current_year = timezone.now().year
