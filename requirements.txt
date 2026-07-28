@@ -19,3 +19,4 @@ python-decouple==3.8
 sqlparse==0.5.5
 tzdata==2026.2
 drf-spectacular==0.30.0
+gunicorn==26.0.0
