@@ -1,13 +1,9 @@
-
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import AllowAny
-from .models import Book
-from .serializers import BookSerializer, PublicBookSerializer
-from rest_framework.permissions import BasePermission
+from .models import Book, Shelf, Review
+from .serializers import BookSerializer, ShelfSerializer, ReviewSerializer, RegisterSerializer
+from rest_framework.permissions import BasePermission, SAFE_METHODS, AllowAny
 
 
 class IsOwner(BasePermission):
@@ -18,26 +14,42 @@ class IsOwner(BasePermission):
         return obj.user == request.user
 
 
+class IsAdminOrReadOnly(BasePermission):
+    def has_permission(self, request, view):
+        return request.method in SAFE_METHODS or request.user.is_staff
+
+
+class ShelfViewSet(viewsets.ModelViewSet):
+    serializer_class = ShelfSerializer
+    permission_classes = [IsOwner]
+
+    def get_queryset(self):
+        return Shelf.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
-    permission_classes = [IsOwner]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['author', 'year', 'is_published']
+    filterset_fields = ['author', 'year']
     search_fields = ['title', 'author', 'description']
     ordering_fields = ['year', 'created_at', 'title']
 
     def get_queryset(self):
-        return Book.objects.filter(user=self.request.user)
+        return Book.objects.all()
 
 
-class PublicBookListView(ListModelMixin, viewsets.GenericViewSet):
-    serializer_class = PublicBookSerializer
-    permission_classes = [AllowAny]
-    pagination_class = LimitOffsetPagination
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['author', 'year']
-    search_fields = ['title', 'author', 'description']
-    ordering_fields = ['year', 'title']
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    permission_classes = [IsOwner]
 
     def get_queryset(self):
-        return Book.objects.filter(is_published=True)
+        return Review.objects.filter(shelf__user=self.request.user)
+
+
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
