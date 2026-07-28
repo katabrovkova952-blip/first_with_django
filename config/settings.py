@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'books',
     'django_filters',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -119,6 +120,8 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5,
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
@@ -126,6 +129,13 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'BookShelf API',
+    'DESCRIPTION': 'API для персональної бібліотеки книг: облік прочитаного, статуси читання, відгуки.',
+    'VERSION': '1.0.0',
 }
 
 
