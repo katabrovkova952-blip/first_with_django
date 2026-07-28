@@ -133,8 +133,7 @@ def test_can_write_review_after_finished(auth_client, user, book):
         format="json",
     )
 
-    assert response.status_code == 999
-    #201
+    assert response.status_code == 201
     assert Review.objects.count() == 1
 
 
