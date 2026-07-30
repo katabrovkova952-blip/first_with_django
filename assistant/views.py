@@ -1,5 +1,7 @@
+from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
@@ -14,7 +16,7 @@ class AssistantAskView(APIView):
     permission_classes = [AllowAny]
     throttle_classes = [AnonRateThrottle]
 
-    def post(self, request):
+    def post(self, request: Request) -> Response:
         serializer = AssistantAskSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -27,7 +29,7 @@ class AssistantAskView(APIView):
                 book = Book.objects.get(id=book_id)
             except Book.DoesNotExist:
                 return Response({'error': 'Книгу з таким id не знайдено'}, status=status.HTTP_404_NOT_FOUND)
-            books = [book]
+            books: QuerySet[Book] | list[Book] = [book]
         else:
             books = (
                 Book.objects.filter(title__icontains=question) | Book.objects.filter(description__icontains=question)
