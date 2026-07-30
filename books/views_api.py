@@ -1,21 +1,29 @@
-from rest_framework import viewsets, generics
-from rest_framework.filters import OrderingFilter, SearchFilter
+from typing import Any
+
+from django.contrib.auth.models import User
+from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Book, Shelf, Review
-from .serializers import BookSerializer, ShelfSerializer, ReviewSerializer, RegisterSerializer
-from rest_framework.permissions import BasePermission, SAFE_METHODS, AllowAny
+from rest_framework import generics, viewsets
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.permissions import SAFE_METHODS, AllowAny, BasePermission
+from rest_framework.request import Request
+from rest_framework.serializers import BaseSerializer
+from rest_framework.views import APIView
+
+from .models import Book, Review, Shelf
+from .serializers import BookSerializer, RegisterSerializer, ReviewSerializer, ShelfSerializer
 
 
 class IsOwner(BasePermission):
-    def has_permission(self, request, view):
+    def has_permission(self, request: Request, view: APIView) -> bool:
         return request.user.is_authenticated
 
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request: Request, view: APIView, obj:Any) -> bool:
         return obj.user == request.user
 
 
 class IsAdminOrReadOnly(BasePermission):
-    def has_permission(self, request, view):
+    def has_permission(self, request: Request, view: APIView) -> bool:
         return request.method in SAFE_METHODS or request.user.is_staff
 
 
@@ -23,10 +31,11 @@ class ShelfViewSet(viewsets.ModelViewSet):
     serializer_class = ShelfSerializer
     permission_classes = [IsOwner]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Shelf]:
+        assert isinstance(self.request.user, User)
         return Shelf.objects.filter(user=self.request.user)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: BaseSerializer[Shelf]) -> None:
         serializer.save(user=self.request.user)
 
 
@@ -38,7 +47,7 @@ class BookViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'author', 'description']
     ordering_fields = ['year', 'created_at', 'title']
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Book]:
         return Book.objects.all()
 
 
@@ -46,7 +55,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [IsOwner]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Review]:
+        assert isinstance(self.request.user, User)
         return Review.objects.filter(shelf__user=self.request.user)
 
 

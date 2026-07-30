@@ -1,8 +1,7 @@
-from django.urls import path, include
+from django.urls import path
+
 from .views import AssistantAskView
 
 app_name = 'assistant'
 
-urlpatterns = [
-    path("ask/", AssistantAskView.as_view())
-]
+urlpatterns = [path('ask/', AssistantAskView.as_view())]
