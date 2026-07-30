@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+OPENAI_API_KEY = config('OPENAI_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'books',
     'django_filters',
     'drf_spectacular',
+    'assistant',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +124,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
 
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "5/minute",
+    },
 }
 
 

@@ -22,7 +22,7 @@ def get_ai_answer(question, books=None):
         messages=[
             {"role": "system", "content": "Ти асистент, що радить книги на основі каталогу сайту."},
             {"role": "user", "content": prompt_text},
-        ], max_tokens=500
+        ], max_completion_tokens=500
     )
 
     answer = response.choices[0].message.content

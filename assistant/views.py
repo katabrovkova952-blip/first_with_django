@@ -33,7 +33,8 @@ class AssistantAskView(APIView):
 
         try:
             answer = get_ai_answer(question, books=books)
-        except Exception:
+        except Exception as e:
+            print(f"AI error: {e}", flush=True)
             return Response({"error": "AI-сервіс тимчасово недоступний"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
         return Response({"answer": answer}, status=status.HTTP_200_OK)

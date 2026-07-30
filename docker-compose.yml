@@ -10,21 +10,23 @@ services:
     depends_on:
       - db
     healthcheck:
-      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')" ]
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/schema/')" ]
       interval: 30s
       timeout: 5s
       retries: 3
     restart: unless-stopped
+    volumes:
+      - .:/app
 
 
   db:
-    image: postgres:18
+    image: postgres:18.4
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     restart: unless-stopped
 
 
