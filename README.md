@@ -13,6 +13,7 @@ BookShelf is a Django REST API for tracking a personal reading life: browse a sh
 - **Filtering/search:** `django-filter`, DRF `SearchFilter` / `OrderingFilter`
 - **AI:** OpenAI API (`gpt-5.4-mini`)
 - **Testing:** pytest, pytest-django
+- **Code quality:** Ruff (linting & formatting), mypy (static type checking, with `django-stubs`)
 - **Docs:** drf-spectacular (Swagger / Redoc)
 - **Infra:** Docker, Docker Compose, Gunicorn
 - **Config:** python-decouple (environment-based settings)
@@ -131,7 +132,15 @@ The API will be available at `http://localhost:8000/`.
 ```
 docker-compose exec bookshelf pytest
 ```
- 
+### Code quality
+
+```
+docker-compose exec bookshelf ruff check .
+docker-compose exec bookshelf mypy books assistant
+```
+Linting, formatting, and static type checks run automatically in CI on every push (see badge above).
+
+
 ## API overview
  
 | Endpoint | Method | Auth | Description |
