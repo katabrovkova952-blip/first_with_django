@@ -5,6 +5,7 @@ from django.conf import settings
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 def get_ai_answer(question, books=None):
+    client = OpenAI(api_key=settings.OPENAI_API_KEY)
     prompt_text = f"Питання користувача: {question}\n\n"
 
     if books:
