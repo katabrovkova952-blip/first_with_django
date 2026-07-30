@@ -1,6 +1,8 @@
 # BookShelf API
 ![CI](https://github.com/katabrovkova952-blip/first_with_django/actions/workflows/tests.yml/badge.svg)
 
+🔗 **Live demo:** https://first-with-django.onrender.com/api/docs/
+
 Backend REST API для персональної бібліотеки книг: облік прочитаних і бажаних книг, відстеження прогресу читання, відгуки.
 
 Навчальний pet-проєкт.
