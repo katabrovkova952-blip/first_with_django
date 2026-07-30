@@ -31,9 +31,20 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
-        
+
       - name: Run Ruff
         run: ruff check .
+
+      - name: Run mypy
+        env:
+          SECRET_KEY: test-secret-key
+          DEBUG: 'True'
+          DB_NAME: bookshelf
+          DB_USER: bookshelf
+          DB_PASSWORD: bookshelf
+          DB_HOST: localhost
+          DB_PORT: 5432
+        run: mypy books assistant
 
       - name: Run tests
         env:
