@@ -1,5 +1,5 @@
 # BookShelf
- ![CI](https://github.com/katabrovkova952-blip/first_with_django/actions/workflows/tests.yml/badge.svg)
+ [![CI](https://github.com/katabrovkova952-blip/first_with_django/actions/workflows/tests.yml/badge.svg)](https://github.com/katabrovkova952-blip/first_with_django/actions/workflows/tests.yml)
 
 BookShelf is a Django REST API for tracking a personal reading life: browse a shared book catalog, keep your own shelf of books you want to read / are reading / have finished, track your page progress, and leave a rating and review once you're done. It also includes an AI-powered assistant that recommends and discusses books grounded in the actual catalog data.
  
